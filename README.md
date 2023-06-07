@@ -37,8 +37,12 @@ Este projeto utiliza o Arduino e um display LCD para criar um sistema de control
 - O Monitor Serial é utilizado para inserir as datas e exibir informações sobre o processo. Certifique-se de configurar a velocidade de comunicação serial correta (9600 bps).
 - Caso deseje interromper o programa antes de verificar a validade de outro produto, digite "0" quando solicitado.
 
-### Autor
+### Autores
 
-Nome: Arthur
+Márcio Gastaldi - RM98811
+Arthur Bessa Pian-RM99215
+Davi Desenzi - RM550849
+Miguel Milok - RM98494
+João Victor Soares Rodrigues - RM551410
 
 Este documento fornece as informações necessárias para utilizar o sistema de monitoramento de validade de alimentos utilizando o Arduino. Siga as instruções fornecidas e desfrute do projeto! 
