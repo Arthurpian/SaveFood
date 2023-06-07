@@ -40,9 +40,13 @@ Este projeto utiliza o Arduino e um display LCD para criar um sistema de control
 ### Autores
 
 Márcio Gastaldi - RM98811
+
 Arthur Bessa Pian-RM99215
+
 Davi Desenzi - RM550849
+
 Miguel Milok - RM98494
+
 João Victor Soares Rodrigues - RM551410
 
 Este documento fornece as informações necessárias para utilizar o sistema de monitoramento de validade de alimentos utilizando o Arduino. Siga as instruções fornecidas e desfrute do projeto! 
