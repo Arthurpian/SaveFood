@@ -1,0 +1,162 @@
+#include <LiquidCrystal.h>
+
+// Configuração do display LCD
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+// Configuração dos pinos dos LEDs
+const int ledVermelho = 6;
+const int ledAmarelo = 7;
+const int ledVerde = 8;
+
+// Função para calcular a diferença de dias entre duas datas
+int diferencaDias(int dia1, int mes1, int ano1, int dia2, int mes2, int ano2) {
+  const int meses[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+  int totalDias1 = ano1 * 365 + dia1;
+  for (int i = 0; i < mes1; i++) {
+    totalDias1 += meses[i];
+  }
+  if (mes1 > 2 && ano1 % 4 == 0 && (ano1 % 100 != 0 || ano1 % 400 == 0)) {
+    totalDias1 += 1;
+  }
+
+  int totalDias2 = ano2 * 365 + dia2;
+  for (int i = 0; i < mes2; i++) {
+    totalDias2 += meses[i];
+  }
+  if (mes2 > 2 && ano2 % 4 == 0 && (ano2 % 100 != 0 || ano2 % 400 == 0)) {
+    totalDias2 += 1;
+  }
+
+  return totalDias2 - totalDias1;
+}
+
+void setup() {
+  // Inicializa o display LCD
+  lcd.begin(16, 2);
+
+  // Define os pinos dos LEDs como saída
+  pinMode(ledVermelho, OUTPUT);
+  pinMode(ledAmarelo, OUTPUT);
+  pinMode(ledVerde, OUTPUT);
+
+  // Limpa o display LCD
+  lcd.clear();
+
+  // Solicita ao usuário para inserir a data atual
+  lcd.print("Data atual:");
+  lcd.setCursor(0, 1);
+  lcd.print("DD/MM/AAAA");
+  Serial.begin(9600); // Inicializa a comunicação serial
+  while (!Serial) {
+    // Aguarda até que a comunicação serial seja estabelecida
+  }
+}
+
+void loop() {
+  // Aguarda até que o usuário insira a data atual completa
+  while (Serial.available() < 10) {
+    // Aguarda
+  }
+
+  // Lê a data atual inserida pelo usuário
+  String dataAtual = Serial.readStringUntil('\n');
+  int diaAtual = dataAtual.substring(0, 2).toInt();
+  int mesAtual = dataAtual.substring(3, 5).toInt();
+  int anoAtual = dataAtual.substring(6, 10).toInt();
+
+  // Exibe a data atual no display LCD
+  lcd.clear();
+  lcd.print("Data atual:");
+  lcd.setCursor(0, 1);
+  lcd.print(dataAtual);
+  delay(3000); // Aguarda 5 segundos
+
+  // Exibe a data atual no Monitor Serial
+  Serial.print("Data atual: ");
+  Serial.println(dataAtual);
+
+  while (true) {
+    // Solicita ao usuário para inserir a data de validade
+    lcd.clear();
+    lcd.print("Data de validade:");
+    lcd.setCursor(0, 1);
+    lcd.print("DD/MM/AAAA");
+
+    // Aguarda até que o usuário insira a data de validade completa
+    while (Serial.available() < 10) {
+      // Aguarda
+    }
+
+    // Lê a data de validade inserida pelo usuário
+    String dataValidade = Serial.readStringUntil('\n');
+    int diaValidade = dataValidade.substring(0, 2).toInt();
+    int mesValidade = dataValidade.substring(3, 5).toInt();
+    int anoValidade = dataValidade.substring(6, 10).toInt();
+
+    // Exibe a data de validade no display LCD
+    lcd.clear();
+    lcd.print("Data validade:");
+    lcd.setCursor(0, 1);
+    lcd.print(dataValidade);
+    delay(3000); // Aguarda 5 segundos
+
+    // Exibe a data de validade no Monitor Serial
+    Serial.print("Data de validade: ");
+    Serial.println(dataValidade);
+
+    // Calcula a diferença de dias entre a data atual e a data de validade
+    int difDias = diferencaDias(diaAtual, mesAtual, anoAtual, diaValidade, mesValidade, anoValidade);
+
+    // Define a cor do LED com base na diferença de dias
+    if (difDias <= 0) {
+      // Validade maior que 10 dias: luz verde acesa
+      digitalWrite(ledVerde, HIGH);
+      digitalWrite(ledAmarelo, LOW);
+      digitalWrite(ledVermelho, LOW);
+    } else if (difDias <= 10) {
+      // Validade próxima de 10 dias: luz amarela acesa
+      digitalWrite(ledVerde, LOW);
+      digitalWrite(ledAmarelo, HIGH);
+      digitalWrite(ledVermelho, LOW);
+    } else {
+      // Validade vencida: luz vermelha acesa
+      digitalWrite(ledVerde, LOW);
+      digitalWrite(ledAmarelo, LOW);
+      digitalWrite(ledVermelho, HIGH);
+    }
+
+    // Exibe a diferença de dias no display LCD
+    lcd.clear();
+    lcd.print("Dif. de dias:");
+    lcd.setCursor(0, 1);
+    lcd.print(difDias);
+
+    // Exibe a diferença de dias no Monitor Serial
+    Serial.print("Diferença de dias: ");
+    Serial.println(difDias);
+
+
+    // Aguarda mais 10 segundos
+    delay(3000);
+
+    // Limpa o display LCD
+    lcd.clear();
+
+    // Pergunta ao usuário se deseja verificar a validade de outro produto
+    lcd.print("Verificar outro?");
+    lcd.setCursor(0, 1);
+    lcd.print("1-Sim  0-Não");
+    while (Serial.available() <= 0) {
+      // Aguarda
+    }
+
+    // Lê a opção do usuário
+    int opcao = Serial.parseInt();
+
+    if (opcao == 0) {
+      // Sai do loop para encerrar o programa
+      break;
+    }
+  }
+}
