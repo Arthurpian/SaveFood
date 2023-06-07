@@ -7,7 +7,7 @@ Este projeto consiste na implementação de um sistema utilizando o Arduino para
 O sistema utiliza um display LCD, um potenciômetro, três LEDs, três resistores, painel e cabos machos.
 
 
-Instruções de Uso
+**Instruções de Uso**
 Monte o circuito conforme o esquema abaixo:
 
 LCD:
